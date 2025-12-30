@@ -1,0 +1,9 @@
+{  
+  "TotalRequests": 15000,
+  "BatchSize": 20,  
+  "Delay": 10,
+  "StartRequestTime": "08:44:35.800",
+  "StartTime": "08:44:55",
+  "EndTime": "08:45:00",
+  "OmsProvider" : 4
+}
