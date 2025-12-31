@@ -1,3 +1,5 @@
+using Infrastructure;
+
 namespace DynamicAutoRequest
 {
     internal static class Program
@@ -8,6 +10,8 @@ namespace DynamicAutoRequest
         [STAThread]
         static void Main()
         {
+            LogBackgroundWriter.Start();
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();

@@ -13,6 +13,8 @@ namespace Domain.Enum
         [Display(Name = "آرمان اکس")]        
         Armanx = 4,
         [Display(Name = "ایزی تریدر")]
-        EasyTrader = 5
+        EasyTrader = 5,
+        [Display(Name = "اسمارت")]
+        Smart = 6
     }
 }

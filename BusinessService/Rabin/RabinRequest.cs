@@ -6,27 +6,29 @@ using System.Text;
 
 namespace BusinessService.SendRequest
 {
-    public class EasyTraderRequest : BaseRequest
+    public class RabinRequest : BaseRequest
     {
         public async Task Send(TimeSpan delay)
         {
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
-            var snapshot = JsonConvertor.ReadJsonData<EasyTraderOrderRequestSnapshot>(JsonFileNames.EasyTraderOrderRequestSnapshot, jsonFolderPath);
+            var snapshot = JsonConvertor.ReadJsonData<RabinOrderRequestSnapshot>(JsonFileNames.RabinOrderRequestSnapshot, jsonFolderPath);
 
             await ExecuteRequest(snapshot);
         }
 
-        private async Task ExecuteRequest(EasyTraderOrderRequestSnapshot snapshot)
+        private async Task ExecuteRequest(RabinOrderRequestSnapshot snapshot)
         {
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, snapshot.Url);
 
+            // ===== Headers =====
             request.Headers.TryAddWithoutValidation("accept", "application/json, text/plain, */*");
-            request.Headers.TryAddWithoutValidation("accept-language", "fa");
+            request.Headers.TryAddWithoutValidation("accept-language", "en-US,en;q=0.9,fa;q=0.8");
 
             request.Headers.Authorization =
                 new AuthenticationHeaderValue("Bearer", snapshot.Authorization.Replace("Bearer ", ""));
 
+            request.Headers.TryAddWithoutValidation("fp", snapshot.FingerPrint);
             request.Headers.TryAddWithoutValidation("origin", snapshot.Origin);
             request.Headers.TryAddWithoutValidation("referer", snapshot.Referer);
             request.Headers.TryAddWithoutValidation("user-agent", snapshot.UserAgent);
@@ -34,14 +36,21 @@ namespace BusinessService.SendRequest
             if (!string.IsNullOrWhiteSpace(snapshot.Cookie))
                 request.Headers.TryAddWithoutValidation("cookie", snapshot.Cookie);
 
-            request.Content = new StringContent(snapshot.JsonBody, Encoding.UTF8, "application/json");
+            // ===== Body =====
+            request.Content = new StringContent(
+                snapshot.JsonBody,
+                Encoding.UTF8,
+                "application/json"
+            );
 
+            // ===== Send =====
             var response = await client.SendAsync(request);
             var responseText = await response.Content.ReadAsStringAsync();
 
+            // ===== Async Logging (Non-blocking) =====
             _ = LogQueue.Channel.Writer.WriteAsync(new RequestLog
             {
-                Provider = OmsProvider.EasyTrader.ToString(),
+                Provider = OmsProvider.Rabin.ToString(),
                 Time = DateTime.Now,
                 Url = snapshot.Url,
                 RequestBody = snapshot.JsonBody,
@@ -50,4 +59,5 @@ namespace BusinessService.SendRequest
             });
         }
     }
+
 }

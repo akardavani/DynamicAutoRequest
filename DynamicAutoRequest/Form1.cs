@@ -1,6 +1,5 @@
 ﻿using BusinessService;
-using BusinessService.Json;
-using BusinessService.SendRequest;
+using Infrastructure;
 using Domain.Enum;
 using Domain.Model;
 using DynamicAutoRequest.BusinessService;
@@ -118,10 +117,10 @@ namespace DynamicAutoRequest
         private async void btnTest_Click(object sender, EventArgs e)
         {
             var reponses = "";
-            var res = await StartWork.Test(_requestTimeData);
-            reponses += Environment.NewLine + res;
+            await StartWork.Test(_requestTimeData);
+            //reponses += Environment.NewLine + res;
 
-            MessageBox.Show(reponses);
+            //MessageBox.Show(reponses);
         }
     }
 }

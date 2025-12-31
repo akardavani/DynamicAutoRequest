@@ -1,12 +1,12 @@
-﻿using BusinessService.Json;
-using Domain.Model;
+﻿using Domain.Model;
+using Infrastructure;
 using System.Text.RegularExpressions;
 
 namespace BusinessService
 {
     public static class EasyTraderSaveData
     {
-        public static async Task SaveJson(string text)
+        public static void SaveJson(string text)
         {
             var snapshot = ParseCurlToSnapshot(text);
 

@@ -1,4 +1,4 @@
-﻿using BusinessService.Json;
+﻿using Infrastructure;
 using BusinessService.SendRequest;
 using Domain.Model;
 using Services;
@@ -33,7 +33,7 @@ namespace DynamicAutoRequest.BusinessService
             }
         }
 
-        public static async Task<(string text, LogJson jsonLog)> Test(RequestTimeData requestTimeData, CancellationToken cancellation = default)
+        public static async Task Test(RequestTimeData requestTimeData, CancellationToken cancellation = default)
         {
             try
             {
@@ -57,11 +57,10 @@ namespace DynamicAutoRequest.BusinessService
 
                 //var orderData = JsonConvertor.ReadJsonDataCollection<OrderData>("OrderData").ToList();
 
-                return await SendHttpRequest.Send(delay, requestTimeData.OmsProvider, orderData[0]);
+                await SendHttpRequest.Send(delay, requestTimeData.OmsProvider);
             }
             catch (Exception e)
             {
-                return ("", null);
             }
         }
 

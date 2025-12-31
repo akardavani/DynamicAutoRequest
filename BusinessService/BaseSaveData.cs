@@ -16,13 +16,17 @@ namespace BusinessService
                 //    new TadbirRequest().Send(delay, orderData);
                 //    break;
 
-                //case (int)OmsProvider.Rabin:
-                //    new RabinRequest().Send(delay, orderData);
-                //    break;
-
                 //case (int)OmsProvider.Armanx:
                 //    new ArmanxRequest().Send(delay, orderData);
                 //    break;
+
+                case (int)OmsProvider.Smart:
+                    SmartSaveData.SaveJson(text);
+                    break;
+
+                case (int)OmsProvider.Rabin:
+                    RabinSaveData.SaveJson(text);
+                    break;
 
                 case (int)OmsProvider.EasyTrader:
                     EasyTraderSaveData.SaveJson(text);

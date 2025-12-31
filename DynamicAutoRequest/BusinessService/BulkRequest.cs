@@ -1,4 +1,4 @@
-﻿using BusinessService.Json;
+﻿using Infrastructure;
 using BusinessService.SendRequest;
 using Domain.Model;
 using Services;
@@ -17,13 +17,13 @@ namespace DynamicAutoRequest.BusinessService
             {
                 var tasks = orderDatas.Select(async orderData =>
                 {
-                    var resp = await SendHttpRequest.Send(delay, requestTimeData.OmsProvider, orderData);
-                    if (resp.log is not null)
-                    {
-                        resp.log.BatchNumber = i;
-                        log.Add(resp.log);
-                    }
+                    await SendHttpRequest.Send(delay, requestTimeData.OmsProvider);
                 });
+
+                //var tasks = orderDatas.Select(async orderData =>
+                //{
+                //    await SendHttpRequest.Send(delay, requestTimeData.OmsProvider, orderData);                    
+                //});
 
                 await Task.WhenAll(tasks);
 
