@@ -6,17 +6,17 @@ using System.Text;
 
 namespace BusinessService.SendRequest
 {
-    public class SmartRequest : BaseRequest
+    public class SmartRequest : IOmsRequest
     {
-        public async Task Send(TimeSpan delay)
+        public SmartOrderRequestSnapshot snapshot = null;
+
+        public SmartRequest()
         {
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
-            var snapshot = JsonConvertor.ReadJsonData<SmartOrderRequestSnapshot>(JsonFileNames.SmartOrderRequestSnapshot, jsonFolderPath);
-
-            await ExecuteRequest(snapshot);
+            snapshot = JsonConvertor.ReadJsonData<SmartOrderRequestSnapshot>(JsonFileNames.SmartOrderRequestSnapshot, jsonFolderPath);
         }
 
-        private async Task ExecuteRequest(SmartOrderRequestSnapshot snapshot)
+        public async Task SendAsync(TimeSpan delay)
         {
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, snapshot.Url);
@@ -75,7 +75,5 @@ namespace BusinessService.SendRequest
                 StatusCode = (int)response.StatusCode
             });
         }
-
     }
-
 }

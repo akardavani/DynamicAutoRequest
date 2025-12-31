@@ -30,7 +30,6 @@ namespace DynamicAutoRequest
 
             cmbProvider.SelectedValue = (OmsProvider)_requestTimeData.OmsProvider;
             cmbProvider.SelectedIndex = _requestTimeData.OmsProvider - 1;
-
         }
 
         private void ComboBox_Load()
@@ -58,24 +57,13 @@ namespace DynamicAutoRequest
 
             if (!string.IsNullOrEmpty(txtRequest.Text))
             {
-                //CreateDynamicData.SaveJson(txtRequest.Text, chkAdd.Checked, chkLog.Checked);               
-
                 BaseSaveData.SaveData(_requestTimeData.OmsProvider, txtRequest.Text);
-
                 MessageBox.Show("حله !!!");
             }
         }
 
         private void SaveRequestTimeData()
         {
-            //_requestTimeData.BatchSize = Convert.ToInt32(txtBatchSize.Text);
-            //_requestTimeData.TotalRequests = Convert.ToInt32(txtTotalRequests.Text);
-            //_requestTimeData.Delay = Convert.ToInt32(txtDelay.Text);
-            //_requestTimeData.StartRequestTime = txtRequestTime.Text;
-            //_requestTimeData.StartTime = txtStart.Text;
-            //_requestTimeData.EndTime = txtEnd.Text;
-            //_requestTimeData.Log = chkLog.Checked;
-            //_requestTimeData.OmsProvider = _requestTimeData.OmsProvider;
             GetRequestTimeData();
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
             JsonConvertor.WriteJsonData(_requestTimeData, JsonFileNames.RequestTimeData, jsonFolderPath);
@@ -83,13 +71,6 @@ namespace DynamicAutoRequest
 
         private async void btnSendRequest_Click(object sender, EventArgs e)
         {
-            //_requestTimeData.BatchSize = Convert.ToInt32(txtBatchSize.Text);
-            //_requestTimeData.TotalRequests = Convert.ToInt32(txtTotalRequests.Text);
-            //_requestTimeData.Delay = Convert.ToInt32(txtDelay.Text);
-            //_requestTimeData.StartRequestTime = txtRequestTime.Text;
-            //_requestTimeData.StartTime = txtStart.Text;
-            //_requestTimeData.EndTime = txtEnd.Text;
-            //_requestTimeData.Log = chkLog.Checked;
             GetRequestTimeData();
             await StartWork.FindStartTime(_requestTimeData);
         }

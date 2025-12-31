@@ -1,8 +1,6 @@
-﻿using Infrastructure;
-using BusinessService.SendRequest;
+﻿using BusinessService.SendRequest;
 using Domain.Model;
-using Services;
-using System.Collections.Concurrent;
+using Domain.Enum;
 
 namespace DynamicAutoRequest.BusinessService
 {
@@ -10,67 +8,35 @@ namespace DynamicAutoRequest.BusinessService
     {
         public static async Task Send(TimeSpan delay, RequestTimeData requestTimeData)
         {
-            var orderDatas = JsonConvertor.ReadJsonDataCollection<OrderData>("OrderData").ToList();
-            var log = new ConcurrentBag<LogJson>();
+            int sent = 0;
 
-            for (int i = 0; i < requestTimeData.TotalRequests; i += requestTimeData.BatchSize)
+            while (sent < requestTimeData.TotalRequests)
             {
-                var tasks = orderDatas.Select(async orderData =>
-                {
-                    await SendHttpRequest.Send(delay, requestTimeData.OmsProvider);
-                });
+                int currentBatchSize = Math.Min(
+                    requestTimeData.BatchSize,
+                    requestTimeData.TotalRequests - sent
+                );
 
-                //var tasks = orderDatas.Select(async orderData =>
-                //{
-                //    await SendHttpRequest.Send(delay, requestTimeData.OmsProvider, orderData);                    
-                //});
+                var tasks = Enumerable
+                    .Range(0, currentBatchSize)
+                    .Select(_ =>
+                        SendHttpRequest.SendAsync(
+                            delay,
+                            (OmsProvider)requestTimeData.OmsProvider
+                        )
+                    )
+                    .ToArray();
 
                 await Task.WhenAll(tasks);
+
+                sent += currentBatchSize;
 
                 if (!CheckTime(delay, requestTimeData))
                     await Task.Delay(requestTimeData.Delay);
             }
 
-            await Logging.SaveLog(log.ToList(), requestTimeData);
+            //await Logging.SaveLog(log.ToList(), requestTimeData);
         }
-
-
-        //public static async Task Send(TimeSpan delay, RequestTimeData requestTimeData)
-        //{
-        //    int numberOfRequests = requestTimeData.TotalRequests;
-        //    int batchSize = requestTimeData.BatchSize;
-        //    var orderDatas = JsonConvertor.ReadJsonDataCollection<OrderData>("OrderData").ToList();
-        //    var log = new List<LogJson>();
-        //    for (int i = 0; i < numberOfRequests; i += batchSize)
-        //    {
-        //        List<int> requestNumbers = Enumerable.Range(i + 1, batchSize).ToList();
-
-        //        Parallel.ForEach(requestNumbers, async (number) =>
-        //        {
-        //            _ = Parallel.ForEach(orderDatas, async (orderData) =>
-        //            {
-        //                var resp = await SendHttpRequest.Send(delay, requestTimeData.OmsProvider, orderData);
-
-        //                if (resp.jsonLog is not null)
-        //                {
-        //                    resp.jsonLog.BatchNumber = i;
-        //                    log.Add(resp.jsonLog);
-        //                }
-        //            });
-        //        });
-
-        //        if (CheckTime(delay, requestTimeData))
-        //        {
-        //            continue;
-        //        }
-
-        //        await Task.Delay(requestTimeData.Delay); // مکث به میلی‌ثانیه
-        //    }
-
-        //    await Task.Delay(30 * 1000);
-
-        //    await Logging.SaveLog(log, requestTimeData);
-        //}
 
         private static bool CheckTime(TimeSpan delay, RequestTimeData requestTimeData)
         {
@@ -94,15 +60,5 @@ namespace DynamicAutoRequest.BusinessService
 
             return resp;
         }
-
-        //private static bool CheckTime(TimeSpan delay, RequestTimeData requestTimeData)
-        //{
-        //    var requestTime = DateTime.Now.TimeOfDay - delay;
-        //    var start = TimeSpan.Parse(requestTimeData.StartTime);
-        //    var end = TimeSpan.Parse(requestTimeData.EndTime);
-
-        //    return start != end && requestTime >= start && requestTime <= end;
-        //}
-
     }
 }

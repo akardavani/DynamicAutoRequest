@@ -1,5 +1,5 @@
-﻿using Infrastructure;
-using BusinessService.SendRequest;
+﻿using BusinessService.SendRequest;
+using Domain.Enum;
 using Domain.Model;
 using Services;
 
@@ -41,23 +41,7 @@ namespace DynamicAutoRequest.BusinessService
                 var requestTime = generateRequestTime.request_time;
                 var delay = await ServiceProviderExtensions.SyncTime(cancellation);
 
-                string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
-
-                var orderDataFile = "";
-                if (Directory.Exists(jsonFolderPath))
-                {
-                    string targetFile = "OrderData.json";
-                    var files = Directory.GetFiles(jsonFolderPath, "*.json");
-                    orderDataFile = files.FirstOrDefault(f => Path.GetFileName(f).Equals(targetFile, StringComparison.OrdinalIgnoreCase));
-                }
-
-                var orderData = JsonConvertor
-                    .ReadJsonDataCollection<OrderData>(orderDataFile.Replace(".json", ""))
-                    .ToList();
-
-                //var orderData = JsonConvertor.ReadJsonDataCollection<OrderData>("OrderData").ToList();
-
-                await SendHttpRequest.Send(delay, requestTimeData.OmsProvider);
+                await SendHttpRequest.SendAsync(delay, (OmsProvider)requestTimeData.OmsProvider);
             }
             catch (Exception e)
             {

@@ -6,17 +6,17 @@ using System.Text;
 
 namespace BusinessService.SendRequest
 {
-    public class EasyTraderRequest : BaseRequest
+    public class EasyTraderRequest : IOmsRequest
     {
-        public async Task Send(TimeSpan delay)
+        public EasyTraderOrderRequestSnapshot snapshot = null;
+
+        public EasyTraderRequest()
         {
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
-            var snapshot = JsonConvertor.ReadJsonData<EasyTraderOrderRequestSnapshot>(JsonFileNames.EasyTraderOrderRequestSnapshot, jsonFolderPath);
-
-            await ExecuteRequest(snapshot);
+            snapshot = JsonConvertor.ReadJsonData<EasyTraderOrderRequestSnapshot>(JsonFileNames.EasyTraderOrderRequestSnapshot, jsonFolderPath);
         }
 
-        private async Task ExecuteRequest(EasyTraderOrderRequestSnapshot snapshot)
+        public async Task SendAsync(TimeSpan delay)
         {
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, snapshot.Url);

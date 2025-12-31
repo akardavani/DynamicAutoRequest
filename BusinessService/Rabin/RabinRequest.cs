@@ -6,17 +6,17 @@ using System.Text;
 
 namespace BusinessService.SendRequest
 {
-    public class RabinRequest : BaseRequest
+    public class RabinRequest : IOmsRequest
     {
-        public async Task Send(TimeSpan delay)
+        public RabinOrderRequestSnapshot snapshot = null;
+
+        public RabinRequest()
         {
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
-            var snapshot = JsonConvertor.ReadJsonData<RabinOrderRequestSnapshot>(JsonFileNames.RabinOrderRequestSnapshot, jsonFolderPath);
-
-            await ExecuteRequest(snapshot);
+            snapshot = JsonConvertor.ReadJsonData<RabinOrderRequestSnapshot>(JsonFileNames.RabinOrderRequestSnapshot, jsonFolderPath);
         }
 
-        private async Task ExecuteRequest(RabinOrderRequestSnapshot snapshot)
+        public async Task SendAsync(TimeSpan delay)
         {
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, snapshot.Url);
@@ -59,5 +59,4 @@ namespace BusinessService.SendRequest
             });
         }
     }
-
 }
