@@ -1,6 +1,5 @@
 ﻿using BusinessService.SendRequest;
-using Domain.Model;
-using Domain.Enum;
+using Domain;
 
 namespace DynamicAutoRequest.BusinessService
 {

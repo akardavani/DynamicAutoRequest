@@ -5,6 +5,7 @@
         public const string EasyTraderOrderRequestSnapshot = "EasyTraderOrderRequestSnapshot";
         public const string RabinOrderRequestSnapshot = "RabinOrderRequestSnapshot";
         public const string SmartOrderRequestSnapshot = "SmartOrderRequestSnapshot";
+        public const string TadbirOrderRequestSnapshot = "TadbirOrderRequestSnapshot";
         public const string RequestTimeData = "RequestTimeData";
     }
 }

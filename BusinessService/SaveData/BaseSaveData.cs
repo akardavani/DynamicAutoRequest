@@ -1,5 +1,5 @@
 ﻿using BusinessService.SendRequest;
-using Domain.Enum;
+using Domain;
 
 namespace BusinessService
 {

@@ -1,5 +1,4 @@
 ﻿using Domain.Model;
-using Newtonsoft.Json;
 using System.Text;
 
 namespace Services
@@ -39,35 +38,35 @@ namespace Services
         //}
 
 
-        public static async Task SaveLog(List<LogJson> log, RequestTimeData requestTimeData)
-        {
-            log = log.OrderBy(e => e.StartDate).ToList();
+        //public static async Task SaveLog(List<LogJson> log, RequestTimeData requestTimeData)
+        //{
+        //    log = log.OrderBy(e => e.StartDate).ToList();
 
-            for (int i = 1; i < log.Count; i++)
-            {
-                log[i].StartDefferent = (log[i].StartDate - log[i - 1].StartDate).Milliseconds;
-                log[i].EndDefferent = (log[i].EndDate - log[i - 1].EndDate).Milliseconds;
-            }
+        //    for (int i = 1; i < log.Count; i++)
+        //    {
+        //        log[i].StartDefferent = (log[i].StartDate - log[i - 1].StartDate).Milliseconds;
+        //        log[i].EndDefferent = (log[i].EndDate - log[i - 1].EndDate).Milliseconds;
+        //    }
 
-            var startSum = log.Sum(e => e.StartDefferent);
-            var endSum = log.Sum(e => e.EndDefferent);
+        //    var startSum = log.Sum(e => e.StartDefferent);
+        //    var endSum = log.Sum(e => e.EndDefferent);
 
-            //var gr = log.GroupBy(e => e.BatchNumber).Select(e =>new { Key = e.Key});
+        //    //var gr = log.GroupBy(e => e.BatchNumber).Select(e =>new { Key = e.Key});
 
-            var json = JsonConvert.SerializeObject(log.OrderBy(e => e.StartDate).ToList());
+        //    var json = JsonConvert.SerializeObject(log.OrderBy(e => e.StartDate).ToList());
 
-            string _path = Directory.GetCurrentDirectory() + @"\Logging\";
+        //    string _path = Directory.GetCurrentDirectory() + @"\Logging\";
 
-            bool folderExists = Directory.Exists(_path);
-            if (!folderExists)
-                Directory.CreateDirectory(_path);
+        //    bool folderExists = Directory.Exists(_path);
+        //    if (!folderExists)
+        //        Directory.CreateDirectory(_path);
 
-            var filePath = $"{_path}log_{requestTimeData.TotalRequests}_{requestTimeData.BatchSize}_{requestTimeData.Delay} ({startSum} ms)_({endSum} ms).txt";
+        //    var filePath = $"{_path}log_{requestTimeData.TotalRequests}_{requestTimeData.BatchSize}_{requestTimeData.Delay} ({startSum} ms)_({endSum} ms).txt";
 
-            await WriteFileStream(json, filePath);
+        //    await WriteFileStream(json, filePath);
 
-            //await Logging.WriteToFileAsync(json, requestTimeData, startSum, endSum);
-        }
+        //    //await Logging.WriteToFileAsync(json, requestTimeData, startSum, endSum);
+        //}
 
         private static async Task WriteFileStream(string content, string filePath)
         {

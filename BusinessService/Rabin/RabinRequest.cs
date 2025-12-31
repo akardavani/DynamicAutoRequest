@@ -1,5 +1,5 @@
 ﻿using Infrastructure;
-using Domain.Enum;
+using Domain;
 using Domain.Model;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,7 +16,7 @@ namespace BusinessService.SendRequest
             snapshot = JsonConvertor.ReadJsonData<RabinOrderRequestSnapshot>(JsonFileNames.RabinOrderRequestSnapshot, jsonFolderPath);
         }
 
-        public async Task SendAsync(TimeSpan delay)
+        public async Task<HttpResponseMessage> SendAsync(TimeSpan delay)
         {
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, snapshot.Url);
@@ -57,6 +57,8 @@ namespace BusinessService.SendRequest
                 ResponseBody = responseText,
                 StatusCode = (int)response.StatusCode
             });
+
+            return response;
         }
     }
 }

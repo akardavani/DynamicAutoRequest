@@ -1,7 +1,6 @@
 ﻿using BusinessService;
 using Infrastructure;
-using Domain.Enum;
-using Domain.Model;
+using Domain;
 using DynamicAutoRequest.BusinessService;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,6 +13,7 @@ namespace DynamicAutoRequest
         {
             InitializeComponent();
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             ComboBox_Load();
@@ -30,19 +30,7 @@ namespace DynamicAutoRequest
 
             cmbProvider.SelectedValue = (OmsProvider)_requestTimeData.OmsProvider;
             cmbProvider.SelectedIndex = _requestTimeData.OmsProvider - 1;
-        }
-
-        private void ComboBox_Load()
-        {
-            var items = Enum.GetValues(typeof(OmsProvider))
-                            .Cast<OmsProvider>()
-                            .Select(x => new { Value = x, Text = GetEnumDisplayName(x) })
-                            .ToList();
-
-            cmbProvider.DataSource = items;
-            cmbProvider.DisplayMember = "Text";
-            cmbProvider.ValueMember = "Value";
-        }
+        }        
 
         public static string GetEnumDisplayName(Enum value)
         {
@@ -60,6 +48,16 @@ namespace DynamicAutoRequest
                 BaseSaveData.SaveData(_requestTimeData.OmsProvider, txtRequest.Text);
                 MessageBox.Show("حله !!!");
             }
+        }
+
+        private async void btnTest_Click(object sender, EventArgs e)
+        {
+            var response = await StartWork.Test(_requestTimeData);
+
+            var responseText = await response.Content.ReadAsStringAsync();
+
+            var caption = $@"{response.StatusCode.ToString()} ==> StatusCode : {(int)response.StatusCode}";
+            MessageBox.Show(responseText, caption);
         }
 
         private void SaveRequestTimeData()
@@ -93,15 +91,18 @@ namespace DynamicAutoRequest
             {
                 _requestTimeData.OmsProvider = (int)selectedProvider;
             }
-        }
+        }        
 
-        private async void btnTest_Click(object sender, EventArgs e)
+        private void ComboBox_Load()
         {
-            var reponses = "";
-            await StartWork.Test(_requestTimeData);
-            //reponses += Environment.NewLine + res;
+            var items = Enum.GetValues(typeof(OmsProvider))
+                            .Cast<OmsProvider>()
+                            .Select(x => new { Value = x, Text = GetEnumDisplayName(x) })
+                            .ToList();
 
-            //MessageBox.Show(reponses);
+            cmbProvider.DataSource = items;
+            cmbProvider.DisplayMember = "Text";
+            cmbProvider.ValueMember = "Value";
         }
     }
 }

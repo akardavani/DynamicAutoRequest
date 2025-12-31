@@ -2,6 +2,6 @@
 {
     public interface IOmsRequest
     {
-        Task SendAsync(TimeSpan delay);
+        Task<HttpResponseMessage> SendAsync(TimeSpan delay);
     }
 }

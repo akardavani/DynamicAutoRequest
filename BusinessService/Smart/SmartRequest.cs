@@ -1,4 +1,4 @@
-﻿using Domain.Enum;
+﻿using Domain;
 using Domain.Model;
 using Infrastructure;
 using System.Net.Http.Headers;
@@ -16,7 +16,7 @@ namespace BusinessService.SendRequest
             snapshot = JsonConvertor.ReadJsonData<SmartOrderRequestSnapshot>(JsonFileNames.SmartOrderRequestSnapshot, jsonFolderPath);
         }
 
-        public async Task SendAsync(TimeSpan delay)
+        public async Task<HttpResponseMessage> SendAsync(TimeSpan delay)
         {
             using var client = new HttpClient();
             using var request = new HttpRequestMessage(HttpMethod.Post, snapshot.Url);
@@ -74,6 +74,8 @@ namespace BusinessService.SendRequest
                 ResponseBody = responseText,
                 StatusCode = (int)response.StatusCode
             });
+
+            return response;
         }
     }
 }

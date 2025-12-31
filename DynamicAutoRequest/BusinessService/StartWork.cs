@@ -1,6 +1,5 @@
 ﻿using BusinessService.SendRequest;
-using Domain.Enum;
-using Domain.Model;
+using Domain;
 using Services;
 
 namespace DynamicAutoRequest.BusinessService
@@ -33,7 +32,7 @@ namespace DynamicAutoRequest.BusinessService
             }
         }
 
-        public static async Task Test(RequestTimeData requestTimeData, CancellationToken cancellation = default)
+        public static async Task<HttpResponseMessage> Test(RequestTimeData requestTimeData, CancellationToken cancellation = default)
         {
             try
             {
@@ -41,10 +40,13 @@ namespace DynamicAutoRequest.BusinessService
                 var requestTime = generateRequestTime.request_time;
                 var delay = await ServiceProviderExtensions.SyncTime(cancellation);
 
-                await SendHttpRequest.SendAsync(delay, (OmsProvider)requestTimeData.OmsProvider);
+                var response = await SendHttpRequest.SendAsync(delay, (OmsProvider)requestTimeData.OmsProvider);
+
+                return response;
             }
             catch (Exception e)
             {
+                return new HttpResponseMessage();
             }
         }
 

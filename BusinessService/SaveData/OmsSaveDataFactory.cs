@@ -1,4 +1,4 @@
-﻿using Domain.Enum;
+﻿using Domain;
 
 namespace BusinessService.SendRequest
 {
@@ -7,9 +7,9 @@ namespace BusinessService.SendRequest
         private static readonly Dictionary<OmsProvider, Func<object>> _map =
             new()
             {
-            // { OmsProvider.Sahra, () => new SahraRequest() },
-            // { OmsProvider.Tadbir, () => new TadbirRequest() },
+            // { OmsProvider.Sahra, () => new SahraRequest() },            
             // { OmsProvider.Armanx, () => new ArmanxRequest() },
+            { OmsProvider.Tadbir, () => new TadbirSaveData() },
             { OmsProvider.Smart, () => new SmartSaveData() },
             { OmsProvider.Rabin, () => new RabinSaveData() },
             { OmsProvider.EasyTrader, () => new EasyTraderSaveData() },

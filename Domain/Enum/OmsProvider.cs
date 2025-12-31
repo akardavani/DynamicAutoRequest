@@ -1,20 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Enum
+namespace Domain
 {
     public enum OmsProvider
     {
-        [Display(Name ="صحرا")]
-        Sahra = 1,
-        [Display(Name = "تدبیر")]
-        Tadbir = 2,
-        [Display(Name = "رابین")]
-        Rabin = 3,
-        [Display(Name = "آرمان اکس")]        
-        Armanx = 4,
         [Display(Name = "ایزی تریدر")]
-        EasyTrader = 5,
+        EasyTrader = 1,
+
         [Display(Name = "اسمارت")]
-        Smart = 6
+        Smart = 2,        
+
+        [Display(Name = "تدبیر")]
+        Tadbir = 3,
+
+        [Display(Name = "رابین")]
+        Rabin = 4,
+
+        [Display(Name = "صحرا")]
+        Sahra = 5,
+
+        [Display(Name = "آرمان اکس")]        
+        Armanx = 6
     }
 }
