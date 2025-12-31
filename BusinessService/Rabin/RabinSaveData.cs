@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace BusinessService
 {
-    public static class RabinSaveData
+    public  class RabinSaveData : IBaseSaveData
     {
-        public static void SaveJson(string text)
+        public  void SaveJson(string text)
         {
             var snapshot = ParseCurlToSnapshot(text);
 
@@ -14,7 +14,7 @@ namespace BusinessService
             JsonConvertor.WriteJsonData(snapshot, JsonFileNames.RabinOrderRequestSnapshot, jsonFolderPath);
         }
 
-        public static RabinOrderRequestSnapshot ParseCurlToSnapshot(string curlText)
+        public  RabinOrderRequestSnapshot ParseCurlToSnapshot(string curlText)
         {
             string? Extract(string pattern)
             {

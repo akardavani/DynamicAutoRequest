@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace BusinessService
 {
-    public static class EasyTraderSaveData
+    public  class EasyTraderSaveData : IBaseSaveData
     {
-        public static void SaveJson(string text)
+        public  void SaveJson(string text)
         {
             var snapshot = ParseCurlToSnapshot(text);
 
@@ -14,7 +14,7 @@ namespace BusinessService
             JsonConvertor.WriteJsonData(snapshot, JsonFileNames.EasyTraderOrderRequestSnapshot, jsonFolderPath);
         }
 
-        public static EasyTraderOrderRequestSnapshot ParseCurlToSnapshot(string curlText)
+        public  EasyTraderOrderRequestSnapshot ParseCurlToSnapshot(string curlText)
         {
             string Extract(string pattern)
             {
