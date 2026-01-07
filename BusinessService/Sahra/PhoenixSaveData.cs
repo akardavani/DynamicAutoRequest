@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace BusinessService
 {
-    public class TadbirSaveData : IBaseSaveData
+    public class PhoenixSaveData : IBaseSaveData
     {
         public void SaveJson(string curlText)
         {
@@ -13,12 +13,12 @@ namespace BusinessService
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
             JsonConvertor.WriteJsonData(
                 snapshot,
-                JsonFileNames.TadbirOrderRequestSnapshot,
+                JsonFileNames.PhoenixOrderRequestSnapshot,
                 jsonFolderPath
             );
         }
 
-        public TadbirOrderRequestSnapshot ParseCurlToSnapshot(string curlText)
+        public PhoenixOrderRequestSnapshot ParseCurlToSnapshot(string curlText)
         {
             string? Extract(string pattern)
             {
@@ -35,27 +35,39 @@ namespace BusinessService
                 return Extract($@"-H\s+'{Regex.Escape(headerName)}:\s*([^']+)'");
             }
 
-            return new TadbirOrderRequestSnapshot
+            var snapshot = new PhoenixOrderRequestSnapshot
             {
                 // ===== URL =====
                 Url = Extract(@"curl\s+'([^']+)'")
                       ?? throw new InvalidOperationException("URL not found"),
 
-                // ===== Headers =====
-                Accept = ExtractHeader("Accept"),
-                AcceptLanguage = ExtractHeader("Accept-Language"),
-                Origin = ExtractHeader("Origin"),
+                // ===== Common =====
                 Referer = ExtractHeader("Referer"),
                 UserAgent = ExtractHeader("User-Agent"),
-                XRequestedWith = ExtractHeader("X-Requested-With"),
-
-                // Cookie از -b
-                Cookie = Extract(@"-b\s+'([^']+)'"),
 
                 // ===== Body =====
                 JsonBody = Extract(@"--data-raw\s+'([\s\S]+?)'")
-                           ?? throw new InvalidOperationException("JSON body not found")
+                           ?? throw new InvalidOperationException("JSON body not found"),
+
+                // ===== Broker specific =====
+                SessionId = ExtractHeader("x-sessionId")
             };
+
+            // ===== Generic Headers =====
+            void Add(string name)
+            {
+                var value = ExtractHeader(name);
+                if (!string.IsNullOrWhiteSpace(value))
+                    snapshot.Headers[name] = value;
+            }
+
+            Add("Accept");
+            Add("Content-Type");
+            Add("sec-ch-ua");
+            Add("sec-ch-ua-mobile");
+            Add("sec-ch-ua-platform");
+
+            return snapshot;
         }
     }
 }

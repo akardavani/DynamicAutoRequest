@@ -17,7 +17,7 @@ namespace Domain
         Rabin = 4,
 
         [Display(Name = "صحرا")]
-        Sahra = 5,
+        Phoenix = 5,
 
         [Display(Name = "آرمان اکس")]        
         Armanx = 6

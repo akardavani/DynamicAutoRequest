@@ -1,5 +1,5 @@
 ﻿using Infrastructure;
-using Domain.Model;
+using Domain;
 using System.Text.RegularExpressions;
 
 namespace BusinessService

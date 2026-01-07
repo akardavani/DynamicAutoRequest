@@ -1,6 +1,5 @@
 ﻿using Infrastructure;
 using Domain;
-using Domain.Model;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -8,7 +7,7 @@ namespace BusinessService.SendRequest
 {
     public class EasyTraderRequest : IOmsRequest
     {
-        public EasyTraderOrderRequestSnapshot snapshot = null;
+        private readonly EasyTraderOrderRequestSnapshot snapshot;
 
         public EasyTraderRequest()
         {

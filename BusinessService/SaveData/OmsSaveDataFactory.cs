@@ -13,6 +13,7 @@ namespace BusinessService.SendRequest
             { OmsProvider.Smart, () => new SmartSaveData() },
             { OmsProvider.Rabin, () => new RabinSaveData() },
             { OmsProvider.EasyTrader, () => new EasyTraderSaveData() },
+            { OmsProvider.Phoenix, () => new PhoenixSaveData() },
             };
 
         public static IBaseSaveData Create(OmsProvider provider)

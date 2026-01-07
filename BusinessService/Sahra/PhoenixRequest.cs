@@ -1,18 +1,20 @@
 ﻿using Domain;
 using Infrastructure;
-using System.Net.Http.Headers;
 using System.Text;
 
 namespace BusinessService.SendRequest
 {
-    public class SmartRequest : IOmsRequest
+    public class PhoenixRequest : IOmsRequest
     {
-        private readonly SmartOrderRequestSnapshot snapshot;
+        private readonly PhoenixOrderRequestSnapshot snapshot;
 
-        public SmartRequest()
+        public PhoenixRequest()
         {
             string jsonFolderPath = Path.Combine(Environment.CurrentDirectory, "Json");
-            snapshot = JsonConvertor.ReadJsonData<SmartOrderRequestSnapshot>(JsonFileNames.SmartOrderRequestSnapshot, jsonFolderPath);
+            snapshot = JsonConvertor.ReadJsonData<PhoenixOrderRequestSnapshot>(
+                JsonFileNames.PhoenixOrderRequestSnapshot,
+                jsonFolderPath
+            );
         }
 
         public async Task<HttpResponseMessage> SendAsync(TimeSpan delay)
@@ -26,31 +28,16 @@ namespace BusinessService.SendRequest
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
 
-            // ===== Authorization =====
-            if (!string.IsNullOrWhiteSpace(snapshot.Authorization))
-            {
-                request.Headers.Authorization =
-                    new AuthenticationHeaderValue(
-                        "Bearer",
-                        snapshot.Authorization.Replace("Bearer ", "")
-                    );
-            }
-
-            // ===== Broker Specific =====
-            if (!string.IsNullOrWhiteSpace(snapshot.FingerPrint))
-                request.Headers.TryAddWithoutValidation("fp", snapshot.FingerPrint);
-
-            if (!string.IsNullOrWhiteSpace(snapshot.Origin))
-                request.Headers.TryAddWithoutValidation("origin", snapshot.Origin);
-
+            // ===== Common =====
             if (!string.IsNullOrWhiteSpace(snapshot.Referer))
-                request.Headers.TryAddWithoutValidation("referer", snapshot.Referer);
+                request.Headers.TryAddWithoutValidation("Referer", snapshot.Referer);
 
             if (!string.IsNullOrWhiteSpace(snapshot.UserAgent))
-                request.Headers.TryAddWithoutValidation("user-agent", snapshot.UserAgent);
+                request.Headers.TryAddWithoutValidation("User-Agent", snapshot.UserAgent);
 
-            if (!string.IsNullOrWhiteSpace(snapshot.Cookie))
-                request.Headers.TryAddWithoutValidation("cookie", snapshot.Cookie);
+            // ===== Broker specific =====
+            if (!string.IsNullOrWhiteSpace(snapshot.SessionId))
+                request.Headers.TryAddWithoutValidation("x-sessionId", snapshot.SessionId);
 
             // ===== Body =====
             request.Content = new StringContent(
@@ -63,10 +50,9 @@ namespace BusinessService.SendRequest
             var response = await client.SendAsync(request);
             var responseText = await response.Content.ReadAsStringAsync();
 
-            // ===== Async Logging =====
             _ = LogQueue.Channel.Writer.WriteAsync(new RequestLog
             {
-                Provider = OmsProvider.Smart.ToString(),
+                Provider = OmsProvider.Phoenix.ToString(),
                 Time = DateTime.Now,
                 Url = snapshot.Url,
                 RequestBody = snapshot.JsonBody,

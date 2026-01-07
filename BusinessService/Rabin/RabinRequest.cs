@@ -8,7 +8,7 @@ namespace BusinessService.SendRequest
 {
     public class RabinRequest : IOmsRequest
     {
-        public RabinOrderRequestSnapshot snapshot = null;
+        private readonly RabinOrderRequestSnapshot snapshot;
 
         public RabinRequest()
         {

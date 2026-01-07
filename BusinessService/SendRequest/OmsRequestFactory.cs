@@ -13,6 +13,7 @@ namespace BusinessService.SendRequest
             { OmsProvider.Smart, () => new SmartRequest() },
             { OmsProvider.Rabin, () => new RabinRequest() },
             { OmsProvider.EasyTrader, () => new EasyTraderRequest() },
+            { OmsProvider.Phoenix, () => new PhoenixRequest() },
             };
 
         public static IOmsRequest Create(OmsProvider provider)
