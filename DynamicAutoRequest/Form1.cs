@@ -6,10 +6,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DynamicAutoRequest
 {
-    public partial class Form1 : Form
+    public partial class frmSend : Form
     {
         RequestTimeData _requestTimeData;
-        public Form1()
+        List<ComboBoxItem> _comboBoxItems;
+        public frmSend()
         {
             InitializeComponent();
         }
@@ -30,7 +31,11 @@ namespace DynamicAutoRequest
 
             cmbProvider.SelectedValue = (OmsProvider)_requestTimeData.OmsProvider;
             cmbProvider.SelectedIndex = _requestTimeData.OmsProvider - 1;
-        }        
+
+            // اسم فرم
+            var frmSend = _comboBoxItems.FirstOrDefault(e => (int)e.Value == _requestTimeData.OmsProvider).Text;
+            Text = frmSend;
+        }
 
         public static string GetEnumDisplayName(Enum value)
         {
@@ -90,19 +95,29 @@ namespace DynamicAutoRequest
             if (cmbProvider.SelectedValue is OmsProvider selectedProvider)
             {
                 _requestTimeData.OmsProvider = (int)selectedProvider;
+
+                // اسم فرم
+                var frmSend = _comboBoxItems.FirstOrDefault(e => e.Value == selectedProvider).Text;
+                Text = frmSend;
             }
-        }        
+        }
 
         private void ComboBox_Load()
         {
-            var items = Enum.GetValues(typeof(OmsProvider))
+            _comboBoxItems = Enum.GetValues(typeof(OmsProvider))
                             .Cast<OmsProvider>()
-                            .Select(x => new { Value = x, Text = GetEnumDisplayName(x) })
+                            .Select(x => new ComboBoxItem { Value = x, Text = GetEnumDisplayName(x) })
                             .ToList();
 
-            cmbProvider.DataSource = items;
+            cmbProvider.DataSource = _comboBoxItems;
             cmbProvider.DisplayMember = "Text";
             cmbProvider.ValueMember = "Value";
+        }
+
+        private class ComboBoxItem
+        {
+            public OmsProvider Value { get; set; }
+            public string Text { get; set; }
         }
     }
 }

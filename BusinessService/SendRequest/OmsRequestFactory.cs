@@ -14,6 +14,7 @@ namespace BusinessService.SendRequest
             { OmsProvider.Rabin, () => new RabinRequest() },
             { OmsProvider.EasyTrader, () => new EasyTraderRequest() },
             { OmsProvider.Phoenix, () => new PhoenixRequest() },
+            { OmsProvider.AsaTrader, () => new AsaTraderRequest() },
             };
 
         public static IOmsRequest Create(OmsProvider provider)

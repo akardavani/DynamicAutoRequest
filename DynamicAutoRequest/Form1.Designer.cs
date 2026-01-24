@@ -1,6 +1,6 @@
 ﻿namespace DynamicAutoRequest
 {
-    partial class Form1
+    partial class frmSend
     {
         /// <summary>
         /// Required designer variable.
@@ -237,7 +237,7 @@
             cmbProvider.TabIndex = 7;
             cmbProvider.SelectedIndexChanged += cmbProvider_SelectedIndexChanged;
             // 
-            // Form1
+            // frmSend
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -259,7 +259,7 @@
             Controls.Add(btnSaveData);
             Controls.Add(txtRequest);
             Margin = new Padding(4, 3, 4, 3);
-            Name = "Form1";
+            Name = "frmSend";
             Text = "Form1";
             Load += Form1_Load;
             ResumeLayout(false);

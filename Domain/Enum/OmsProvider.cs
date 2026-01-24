@@ -20,6 +20,9 @@ namespace Domain
         Phoenix = 5,
 
         [Display(Name = "آرمان اکس")]        
-        Armanx = 6
+        Armanx = 6,
+
+        [Display(Name = "آسا تریدر")]
+        AsaTrader = 7,
     }
 }

@@ -14,6 +14,7 @@ namespace BusinessService.SendRequest
             { OmsProvider.Rabin, () => new RabinSaveData() },
             { OmsProvider.EasyTrader, () => new EasyTraderSaveData() },
             { OmsProvider.Phoenix, () => new PhoenixSaveData() },
+            { OmsProvider.AsaTrader, () => new AsaTraderSaveData() },
             };
 
         public static IBaseSaveData Create(OmsProvider provider)
